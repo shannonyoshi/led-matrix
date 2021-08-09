@@ -34,35 +34,28 @@ alien1={
   9:[0,2,3,4],
   10:[3,4,5,6]
 }
-# which alien should be an alien dictionary, start is the row number, partRows is for making only part of alien
-def makeAlien(whichAlien, start, partRows=0):
+# which alien should be an alien dictionary, partRows is for making only part of alien
+def makeAlien(whichAlien, startRow, partRows=0):
   alienWidth=len(whichAlien)
-  # i is an individual light
-  startI=(start)*8
-  i=copy.deepcopy(startI)
-  if partRows>0:
-    endI=startI+partRows*8
-  else:
-    endI=startI+alienWidth*8
-  while i<256 and i<endI:
-      # lights numbers go up one column then down the next
-      rem=i%16
-      # col=0 to 8
-      col=(7-rem if rem <8 else rem-8)
-      # print("col:", col)
-      # row=0 to 31
-      row=math.floor(i/8-start)
-      # print("row:", row)
-      if partRows>0:
-        row=row+alienWidth-partRows
-
-      thisRow=whichAlien[row]
-      if col in thisRow:
-        pixels[i]=rainbow(col)
+  loopCount = alienWidth if partRows<=0 else partRows
+  for i in range(loopCount):
+    x=startRow+i
+    rowLights=whichAlien[alienWidth-loopCount+i]
+    for j in range(8):
+      if j in rowLights:
+        writePix([x, j], (1,1,1))
       else:
-        pixels[i]=(0,0,0)
-      i+=1
+        writePix([x,j], (0,0,0))
 
+# coords=[x=row,y=column], color=(r,g,b)
+def writePix(coords, color):
+    pixel = coords[0]*8
+    if coords[0]%2==0:
+      pixel+=coords[1]
+    else:
+      pixel+=7-coords[1]
+    if pixel>=0 and pixel <256:
+      pixels[pixel]=color
 
 def blankRow(startRow):
   # only 32 rows total
@@ -117,18 +110,9 @@ rainbowDict={
 def divTuple(rgb, div):
   return(rgb[0]/div,rgb[1]/div,rgb[2]/div, )
 
-def rainbow(col):
-  return divTuple(rainbowDict[col], 12)
+# takes y coordinate
+def rainbow(y):
+  return divTuple(rainbowDict[y], 12)
 
-
-# makeAlien(alien0,0,5)
 
 moveAliens()
-
-# moveAliens()
-# print("Alien0")
-# makeAlien(alien0, 0)
-# print("Alien1")
-# makeAlien(alien1, 12)
-# makeAlien(alien1, 24)
-# makeAlien(alien0,12)
