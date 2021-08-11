@@ -34,18 +34,72 @@ alien1={
   9:[0,2,3,4],
   10:[3,4,5,6]
 }
+
+alien2={
+  0:[1,3,4],
+  1:[0,2,3,4,5],
+  2:[3,5,6],
+  3:[2,3,4,5,6,7],
+  4:[2,3,4,5,6,7],
+  5:[3,5,6],
+  6:[0,2,3,4,5],
+  7:[1,3,4]
+}
+
+alien3={
+  0:[0,3,4],
+  1:[1,3,4],
+  2:[0,2,3,5,6],
+  3:[1,3,4,5,6,7],
+  4:[1,3,4,5,6,7],
+  5:[0,2,3,5,6],
+  6:[1,3,4],
+  7:[0,3,4]
+}
+
+alien4={
+ 0:[0,3,4],
+ 1:[0,3,4,5,6],
+ 2:[1,3,4,5,6],
+ 3:[1,2,3,5,6],
+ 4:[2,3,5,6,7],
+ 5:[1,3,4,5,6,7],
+ 6:[1,3,4,5,6,7],
+ 7:[2,3,5,6,7],
+ 8:[1,2,3,5,6],
+ 9:[1,3,4,5,6],
+ 10:[0,3,4,5,6],
+ 11:[0,3,4],
+}
+
+alien5={
+  0:[3,4,5],
+  1:[1,3,4,5,6],
+  2:[0,1,2,3,4,5,6],
+  3:[0,2,3,5,6],
+  4:[2,3,5,6,7],
+  5:[1,3,4,5,6,7],
+  6:[1,3,4,5,6,7],
+  7:[2,3,5,6,7],
+  8:[0,2,3,5,6],
+  9:[0,1,2,3,4,5,6],
+  10:[1,3,4,5,6],
+  11:[3,4,5],
+}
+
 # which alien should be an alien dictionary, partRows is for making only part of alien
 def makeAlien(whichAlien, startRow, partRows=0):
   alienWidth=len(whichAlien)
-  loopCount = alienWidth if partRows<=0 else partRows
-  for i in range(loopCount):
-    x=startRow+i
-    rowLights=whichAlien[alienWidth-loopCount+i]
-    for j in range(8):
-      if j in rowLights:
-        writePix([x, j], (1,1,1))
-      else:
-        writePix([x,j], (0,0,0))
+  if startRow<32:
+    loopCount = alienWidth if partRows<=0 else partRows
+    for i in range(loopCount):
+      x=startRow+i
+      rowLights=whichAlien[alienWidth-loopCount+i]
+      for j in range(8):
+        if j in rowLights:
+          writePix([x, j], (1,1,1))
+        else:
+          writePix([x,j], (0,0,0))
 
 # coords=[x=row,y=column], color=(r,g,b)
 def writePix(coords, color):
@@ -73,26 +127,26 @@ def moveAliens():
           makeAlien(alien1,0,i-1)
         if i>0:
           blankRow(i-1)
-          makeAlien(alien0, i)
-          blankRow(i+11)
-          makeAlien(alien1,i+12)
-          blankRow(i+23)
-          makeAlien(alien0, i+24)
-          pixels.show()
+          
+        makeAlien(alien3, i)
+        blankRow(i+len(alien3))
+        makeAlien(alien5,i+len(alien3)+1)
+        blankRow(i+len(alien5)+len(alien3))
+        makeAlien(alien1, i+len(alien5)+len(alien3)+2)
+        pixels.show()
       else:
         if i>1:
           makeAlien(alien0,0,i-1)
         if i>0:
           blankRow(i-1)
-          makeAlien(alien1, i)
-          blankRow(i+11)
-          makeAlien(alien0,i+12)
-          blankRow(i+23)
-          makeAlien(alien1, i+24)
-          pixels.show()
+        makeAlien(alien2, i)
+        blankRow(i+len(alien2))
+        makeAlien(alien4,i+len(alien2)+1)
+        blankRow(i+len(alien4)+len(alien2))
+        makeAlien(alien0, i+len(alien4)+len(alien2)+2)
+        pixels.show()
 
       time.sleep(1)
-
 
 
 # To Make a RAINBOW
